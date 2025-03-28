@@ -9,7 +9,6 @@ import { notFound } from "next/navigation"
 export const metadata: Metadata = {
   title: "Checkout",
 }
-
 export default async function Checkout() {
   const cart = await retrieveCart()
 

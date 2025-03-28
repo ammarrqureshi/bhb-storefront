@@ -1,36 +1,61 @@
-import { Github } from "@medusajs/icons"
-import { Button, Heading } from "@medusajs/ui"
+
+"use client"
+
+import React from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, Pagination, EffectFade } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/pagination"
+import "swiper/css/effect-fade"
+import Link from "next/link"
+
+const slides = [
+  {
+    id: 1,
+    image: "/banners/banner1.png",
+  },
+  {
+    id: 2,
+    image: "/banners/banner2.png",
+  },
+  {
+    id: 3,
+    image: "/banners/banner3.png",
+  },
+]
 
 const Hero = () => {
   return (
-    <div className="h-[75vh] w-full border-b border-ui-border-base relative bg-ui-bg-subtle">
-      <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center small:p-32 gap-6">
-        <span>
-          <Heading
-            level="h1"
-            className="text-3xl leading-10 text-ui-fg-base font-normal"
-          >
-            Ecommerce Starter Template
-          </Heading>
-          <Heading
-            level="h2"
-            className="text-3xl leading-10 text-ui-fg-subtle font-normal"
-          >
-            Powered by Medusa and Next.js
-          </Heading>
-        </span>
-        <a
-          href="https://github.com/medusajs/nextjs-starter-medusa"
-          target="_blank"
-        >
-          <Button variant="secondary">
-            View on GitHub
-            <Github />
-          </Button>
-        </a>
-      </div>
+    <div className="relative w-full h-[80vh]">
+      <Swiper
+        modules={[Autoplay, Pagination, EffectFade]}
+        effect="fade"
+        autoplay={{ delay: 4000 }}
+        pagination={{ clickable: true }}
+        loop
+        className="w-full h-full"
+      >
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div
+              className="w-full h-full bg-cover bg-center relative"
+              style={{ backgroundImage: `url(${slide.image})` }}
+            >
+              <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2">
+                <Link
+                  href="/store"
+                  className="bg-white/90 text-black px-10 py-4 rounded-full text-xl font-semibold hover:bg-white transition"
+                >
+                  Order Now
+                </Link>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
 
 export default Hero
+
