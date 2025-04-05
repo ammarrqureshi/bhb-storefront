@@ -115,10 +115,12 @@ export async function addToCart({
   variantId,
   quantity,
   countryCode,
+  metadata, // Add metadata parameter
 }: {
   variantId: string
   quantity: number
   countryCode: string
+  metadata?: Record<string, any> // Optional metadata
 }) {
   if (!variantId) {
     throw new Error("Missing variant ID when adding to cart")
@@ -140,6 +142,7 @@ export async function addToCart({
       {
         variant_id: variantId,
         quantity,
+        metadata: metadata || {}, // Include metadata if provided
       },
       {},
       headers
@@ -152,9 +155,7 @@ export async function addToCart({
       revalidateTag(fulfillmentCacheTag)
     })
     .catch(medusaError)
-}
-
-export async function updateLineItem({
+} export async function updateLineItem({
   lineId,
   quantity,
 }: {

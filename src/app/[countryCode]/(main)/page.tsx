@@ -2,6 +2,8 @@ import { Metadata } from "next"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
+import CarouselProducts from "@modules/home/components/carousel-products"
+import { getCarouselProducts } from "@lib/data/carousel-products"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 
@@ -18,6 +20,7 @@ export default async function Home(props: {
 
   const { countryCode } = params
 
+  const products = await getCarouselProducts()
   const region = await getRegion(countryCode)
 
   const { collections } = await listCollections({
@@ -31,11 +34,11 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
+      <div className="container max-w-[75%] mx-auto ">
+
+        <CarouselProducts products={products} region={region} />
       </div>
+
     </>
   )
 }

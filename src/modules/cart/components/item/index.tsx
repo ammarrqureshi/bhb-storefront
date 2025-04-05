@@ -24,6 +24,14 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Extract metadata
+  const metadata = item.metadata as {
+    selectedCheckboxOptions?: { id: string; priceIncrease: number }[]
+    finalPrice?: number
+  } | undefined
+  const adjustedPrice = metadata?.finalPrice ?? item.unit_price
+  const checkboxOptions = metadata?.selectedCheckboxOptions || []
+
   const changeQuantity = async (quantity: number) => {
     setError(null)
     setUpdating(true)
@@ -70,6 +78,16 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
           {item.product_title}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        {/* Display selected checkbox options */}
+        {checkboxOptions.length > 0 && (
+          <ul className="text-sm text-gray-600 mt-1">
+            {checkboxOptions.map((opt) => (
+              <li key={opt.id}>
+                {opt.id.replace("_", " ").toUpperCase()}: +${(opt.priceIncrease / 100).toFixed(2)}
+              </li>
+            ))}
+          </ul>
+        )}
       </Table.Cell>
 
       {type === "full" && (
@@ -82,7 +100,6 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
               className="w-14 h-10 p-4"
               data-testid="product-select-button"
             >
-              {/* TODO: Update this with the v2 way of managing inventory */}
               {Array.from(
                 {
                   length: Math.min(maxQuantity, 10),
@@ -93,7 +110,6 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
                   </option>
                 )
               )}
-
               <option value={1} key={1}>
                 1
               </option>
@@ -110,6 +126,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
             item={item}
             style="tight"
             currencyCode={currencyCode}
+            overridePrice={adjustedPrice} // Pass adjusted price
           />
         </Table.Cell>
       )}
@@ -127,6 +144,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
                 item={item}
                 style="tight"
                 currencyCode={currencyCode}
+                overridePrice={adjustedPrice} // Pass adjusted price
               />
             </span>
           )}
@@ -134,6 +152,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
             item={item}
             style="tight"
             currencyCode={currencyCode}
+            overridePrice={adjustedPrice} // Pass adjusted price
           />
         </span>
       </Table.Cell>
